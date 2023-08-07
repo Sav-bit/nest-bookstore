@@ -1,4 +1,4 @@
-# Nest bookstore
+# Nest bookstore 📚
 
 Nest Bookstore is a simple system designed to perform CRUD operations on a library using both **REST API** and **GraphQL API**. It is developed using **NestJS** and utilizes **Prisma** as the ORM to connect to a **MySQL database**.
 

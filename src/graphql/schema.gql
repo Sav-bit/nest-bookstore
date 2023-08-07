@@ -1,0 +1,64 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BookLight {
+  id: Int!
+  title: String!
+  description: String
+  publishedYear: Int
+  stockCount: Int!
+  authorId: Int!
+}
+
+type Book {
+  id: Int!
+  title: String!
+  description: String
+  publishedYear: Int
+  stockCount: Int!
+  authorId: Int!
+  author: AuthorLight!
+}
+
+type AuthorLight {
+  id: Int!
+  name: String!
+  bio: String
+}
+
+type Author {
+  id: Int!
+  name: String!
+  bio: String
+  publishedBooks: [BookLight!]
+}
+
+type Query {
+  getBooks: [Book!]!
+  findBook(id: Int!): Book!
+  getAuthors: [Author!]!
+  findAuthor(id: Int!): Author!
+}
+
+type Mutation {
+  createBook(newBook: CreateBook!): Book!
+  removeBook(id: Int!): Book!
+  updateBook(id: Int!, updatedBook: CreateBook!): Book!
+  createAuthor(newAuthor: AuthorDTO!): Author!
+  updateAuthor(id: Int!, updatedAuthor: AuthorDTO!): Author!
+  removeAuthor(id: Int!): Author!
+}
+
+input CreateBook {
+  title: String!
+  description: String
+  publishedYear: Int
+  stockCount: Int! = 0
+  author: Int!
+}
+
+input AuthorDTO {
+  name: String!
+  bio: String
+}

@@ -1,0 +1,723 @@
+{
+	"info": {
+		"_postman_id": "51a9cc5a-b4eb-4d21-87d2-5a5e1d599411",
+		"name": "Sav-Bookstore REST API",
+		"description": "REST API for the bookstore!\n\n...The Graphql ones are in another ~~castle~~ collection! ⛫",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28632754"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get all books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/books",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"books"
+							]
+						},
+						"description": "Request to get all books\n\nThe server will return:\n\n- **200** - the requested books\n- **500 -** in case of a generic server error"
+					},
+					"response": []
+				},
+				{
+					"name": "Find book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/books/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"books",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "id of the requested book"
+								}
+							]
+						},
+						"description": "Request to find a specific book by its id, with the detail of the author.\n\nThe server will return:\n\n- **200** - the requested book\n- **404** - if the book with the requested ID does not exist.\n- **500 -** in case of a generic server error."
+					},
+					"response": [
+						{
+							"name": "Find book",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/books/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "217"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"d9-+cDywpGcXOICgoILqOVZnluTH6o\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 31 Jul 2023 08:48:53 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"title\": \"The broom of the system\",\n    \"description\": \"First novel of DFW, how cool!\",\n    \"publishedYear\": null,\n    \"stockCount\": 2,\n    \"authorId\": 1,\n    \"author\": {\n        \"id\": 1,\n        \"name\": \"David Foster Wallace\",\n        \"bio\": \"Some guy with a bandana\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{hostname}}/books/",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"books",
+								""
+							]
+						},
+						"description": "Request to create a specific book.\n\nThere are two ways to create a book:\n\n1. Create a book and associate it with an **existing author** in the database. In this case, the \"author\" field **will be an integer** representing his ID.\n2. Create a book **along with its author**. In this case, the \"author\" field in the request body will be an _AuthorDTO_ in the format `{ \"name\": $nameOfTheAuthor, \"bio\": $bioOfTheAuthor }`.\n    \n\nThis feature is available only for the REST API. I understand that this approach might not be conventional, but in my work I have had to solve specific client needs by implementing workarounds. I thought that demonstrating my adaptability to such requests in an educational environment could be appreciated.\n\nIn any case, the service will return:\n\n- **201** - if the book is created successfully.\n- **400** - In case the body is not formatted correctly or the fields are  \n    invalid (`stockCount` < 0 or `publishedYear` > $currentYear).\n- **404** - if the creation mode is 1, and there is no such author with that ID.\n- **500** - in case of a generic server error.\n    \n\n**Examples available below:**"
+					},
+					"response": [
+						{
+							"name": "Create Book and author",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Fahrenheit 451\",\n    \"description\": \"Gosh it's really hard to spell the word fahrenheit, I had to search it on Google!\",\n    \"publishedYear\": 1953,\n    \"stockCount\": 2,\n    \"author\": {\n        \"name\": \"Ray Bradbury\",\n        \"bio\": \"Did you know that Ray is the short for Raymond?\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/books",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 14,\n    \"title\": \"Fahrenheit 451\",\n    \"description\": \"Gosh it's really hard to spell the word fahrenheit, I had to search it on Google!\",\n    \"publishedYear\": 1953,\n    \"stockCount\": 2,\n    \"authorId\": 15\n}"
+						},
+						{
+							"name": "Create Book published by an existing author",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"A Moveable Feast\",\n    \"description\": \"Let's hope that the author with id 4 is Hemingway!\",\n    \"publishedYear\": 1964,\n    \"stockCount\": 6,\n    \"author\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/books",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 15,\n    \"title\": \"A Moveable Feast\",\n    \"description\": \"Let's hope that the author with id 4 is Hemingway!\",\n    \"publishedYear\": 1964,\n    \"stockCount\": 6,\n    \"authorId\": 4\n}"
+						}
+					]
+				},
+				{
+					"name": "Update book",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{hostname}}/books/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"books",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Id of the book that we want to update"
+								}
+							]
+						},
+						"description": "Request to update a specific book.\n\nAs with creation, in this case it is also possible to follow the same procedure with the 'author' field, in fact you can:\n\n1. Updating a book by associating it with an **existing author** in the database. In this case, the \"author\" field **will be an integer** representing his ID.\n2. Updating a book by **creating a new author** and then associate the two. In this case, the \"author\" field in the request body will be an _AuthorDTO_ in the format `{ \"name\": $nameOfTheAuthor, \"bio\": $bioOfTheAuthor }`.\n    \n\nThis feature is available only for the REST API. I understand that this approach might not be conventional, but in my work I have had to solve specific client needs by implementing workarounds. I thought that demonstrating my adaptability to such requests in an educational environment could be appreciated.\n\nIn any case, the service will return:\n\n- **200** - if the book is updated successfully.\n- **400** - In case the body is not formatted correctly or the fields are  \n    invalid (`stockCount` < 0 or `publishedYear` > $currentYear).\n- **404** - if the book with the requested ID does not exist or/and the updating mode is 1, and there is no such author with that ID.\n- **500** - in case of a generic server error.\n    \n\n**Examples available below:**"
+					},
+					"response": [
+						{
+							"name": "Update book with author existing",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"The Plague\",\n    \"description\": \"How did Camus predict so well our behavior during covid?\",\n    \"publishedYear\": 1947,\n    \"stockCount\": 4,\n    \"author\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/books/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "4",
+											"description": "Id of the book that we want to update"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"title\": \"The Plague\",\n    \"description\": \"How did Camus predict so well our behavior during covid?\",\n    \"publishedYear\": 1947,\n    \"stockCount\": 4,\n    \"authorId\": 2\n}"
+						},
+						{
+							"name": "Update book creating a new author",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"The Hobbit\",\n    \"description\": \"Am I being pretentious if I say that the book is better? I mean, why did they put Legolas in the movie?\",\n    \"publishedYear\": 1937,\n    \"stockCount\": 5,\n    \"author\": {\n        \"name\" : \"J. R. R. Tolkien\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/books/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "8",
+											"description": "Id of the book that we want to update"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 8,\n    \"title\": \"The Hobbit\",\n    \"description\": \"Am I being pretentious if I say that the book is better? I mean, why did they put Legolas in the movie?\",\n    \"publishedYear\": 1937,\n    \"stockCount\": 5,\n    \"authorId\": 16\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/books/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"books",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Id of the book we want to delete"
+								}
+							]
+						},
+						"description": "Request to delete a specific book by its id.\n\nThe server will return:\n\n- **200** - the requested book is deleted successfully\n- **404** - if the book with the requested ID does not exist.\n- **500 -** in case of a generic server error."
+					},
+					"response": []
+				}
+			],
+			"description": "Under the path `/books`, it is possible to access the \"book\" resource via the **REST API**, enabling **CRUD** operations."
+		},
+		{
+			"name": "Authors",
+			"item": [
+				{
+					"name": "Get all authors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/authors",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"authors"
+							],
+							"query": [
+								{
+									"key": "include-books",
+									"value": "true",
+									"description": "if set to true, will return within the author the list of the published books",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Request to get all authors\n\nNormally, only authors are returned, but I thought it could be interesting to add an optional QueryParameter \"_include-books_\", which, if set to \"**true**\", also returns the books published by each author.\n\nthe server return\n\n- **200** - all the authors\n- **400** - if request is not formatted correctly (eg include books has some random value)\n- **500 -** in case of a generic server error."
+					},
+					"response": [
+						{
+							"name": "Get all authors with books included",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/authors?include-books=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"authors"
+									],
+									"query": [
+										{
+											"key": "include-books",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"David Foster Wallace\",\n        \"bio\": \"Some guy with a bandana\",\n        \"publishedBooks\": [\n            {\n                \"id\": 1,\n                \"title\": \"Infinite jest\",\n                \"description\": \"An incredibly looooong book\",\n                \"publishedYear\": 1996,\n                \"stockCount\": 4,\n                \"authorId\": 1\n            },\n            {\n                \"id\": 2,\n                \"title\": \"The broom of the system\",\n                \"description\": \"First novel of DFW, how cool!\",\n                \"publishedYear\": null,\n                \"stockCount\": 2,\n                \"authorId\": 1\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Albert Camus\",\n        \"bio\": \"Coolest writer ever, not just because he's my favorite tho!\",\n        \"publishedBooks\": [\n            {\n                \"id\": 4,\n                \"title\": \"The Plague\",\n                \"description\": \"How did Camus predict so well our behavior during covid?\",\n                \"publishedYear\": 1947,\n                \"stockCount\": 4,\n                \"authorId\": 2\n            },\n            {\n                \"id\": 7,\n                \"title\": \"Myth of Sysyphus\",\n                \"description\": null,\n                \"publishedYear\": null,\n                \"stockCount\": 2,\n                \"authorId\": 2\n            }\n        ]\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Jane Austen\",\n        \"bio\": null,\n        \"publishedBooks\": [\n            {\n                \"id\": 5,\n                \"title\": \"Pride and prejudice\",\n                \"description\": \"Damn mr Darcy, chill!\",\n                \"publishedYear\": 1813,\n                \"stockCount\": 6,\n                \"authorId\": 3\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Ernest Hemingway\",\n        \"bio\": \"Really, he was a tough guy!\",\n        \"publishedBooks\": [\n            {\n                \"id\": 15,\n                \"title\": \"A Moveable Feast\",\n                \"description\": \"Let's hope that the author with id 4 is Hemingway!\",\n                \"publishedYear\": 1964,\n                \"stockCount\": 6,\n                \"authorId\": 4\n            }\n        ]\n    },\n    {\n        \"id\": 6,\n        \"name\": \"Voltaire\",\n        \"bio\": null,\n        \"publishedBooks\": [\n            {\n                \"id\": 6,\n                \"title\": \"Candid\",\n                \"description\": null,\n                \"publishedYear\": 2023,\n                \"stockCount\": 6,\n                \"authorId\": 6\n            }\n        ]\n    },\n    {\n        \"id\": 15,\n        \"name\": \"Ray Bradbury\",\n        \"bio\": \"Did you know that Ray is the short for Raymond?\",\n        \"publishedBooks\": [\n            {\n                \"id\": 14,\n                \"title\": \"Fahrenheit 451\",\n                \"description\": \"Gosh it's really hard to spell the word fahrenheit, I had to search it on Google!\",\n                \"publishedYear\": 1953,\n                \"stockCount\": 2,\n                \"authorId\": 15\n            }\n        ]\n    },\n    {\n        \"id\": 16,\n        \"name\": \"J. R. R. Tolkien\",\n        \"bio\": null,\n        \"publishedBooks\": [\n            {\n                \"id\": 8,\n                \"title\": \"The Hobbit\",\n                \"description\": \"Am I being pretentious if I say that the book is better? I mean, why did they put Legolas in the movie?\",\n                \"publishedYear\": 1937,\n                \"stockCount\": 5,\n                \"authorId\": 16\n            }\n        ]\n    },\n    {\n        \"id\": 17,\n        \"name\": \"Italo Calvino\",\n        \"bio\": \"Shoot, I just realized i haven't put any italian writer in the system!\",\n        \"publishedBooks\": []\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Find Author",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/authors/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"authors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "id of the searched author"
+								}
+							]
+						},
+						"description": "Request to find a specific author by its id, with the list of the published books.\n\nThe server will return:\n\n- **200** - the author book and books\n- **404** - if the author with the requested ID does not exist.\n- **500 -** in case of a generic server error."
+					},
+					"response": []
+				},
+				{
+					"name": "Create author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{hostname}}/authors",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"authors"
+							]
+						},
+						"description": "Request to create a specific author.\n\nthe server will return:\n\n- **201** - if the author si created successfully.\n- **400** - In case the body is not formatted correctly.\n- **500** **\\-** in case of a generic server error."
+					},
+					"response": [
+						{
+							"name": "Create author",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Italo Calvino\",\n    \"bio\": \"Shoot, I just realized i haven't put any italian writer in the system!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/authors",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 17,\n    \"name\": \"Italo Calvino\",\n    \"bio\": \"Shoot, I just realized i haven't put any italian writer in the system!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update author",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{hostname}}/authors/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"authors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "id of the author we want to update"
+								}
+							]
+						},
+						"description": "Request to update a specific author.\n\nthe server will return:\n\n- **200** - if the author si updated successfully.\n- **400** - In case the body is not formatted correctly.\n- **404** - if the author with the requested ID does not exist.\n- **500** **\\-** in case of a generic server error."
+					},
+					"response": [
+						{
+							"name": "Update author",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Albert Camus\",\n    \"bio\": \"Coolest writer ever, not just because he's my favorite tho!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/authors/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"authors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"name\": \"Albert Camus\",\n    \"bio\": \"Coolest writer ever, not just because he's my favorite tho!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete author",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{hostname}}/authors/:id",
+							"protocol": "http",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"authors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null,
+									"description": "Id of the author we want to delete"
+								}
+							]
+						},
+						"description": "Request to delete a specific author.\n\nthe server will return:\n\n- **200** - if the author is deleted.\n- **400** - In case the path variable is not formatted correctly.\n- **403** - If the author has published books in the database.\n- **404** - if the author with the requested ID does not exist.\n- **500** **\\-** in case of a generic server error."
+					},
+					"response": []
+				}
+			],
+			"description": "Under the path `/authors`, it is possible to access the \"authors\" resource via the **REST API**, enabling **CRUD** operations."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hostname",
+			"value": "localhost"
+		}
+	]
+}

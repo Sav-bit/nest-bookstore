@@ -17,11 +17,22 @@ services:
       - ./prisma/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
       #The actual volume is commented, so you don't have to worry to delete it after the test!
       #- db_data:/var/lib/mysql
+
+    #This is necessary because, since I want to provide you with a pre-populated database to work with, it's important to wait for the import of the initdb.sql to complete. 
+    #Periodic checks are performed to ensure everything is okay. Once it passes the healthy check, the "backend" service is also launched.
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      start_period: 20s
+      interval: 10s
+      timeout: 20s
+      retries: 55
     
   backend:
     build: .
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
     ports:
     - "80:3000"   
   
